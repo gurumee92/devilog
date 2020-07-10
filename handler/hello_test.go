@@ -9,6 +9,7 @@ import (
 )
 
 func TestHello(t *testing.T) {
+	tearDown()
 	setup()
 	req := httptest.NewRequest(http.MethodGet, "/hello", nil)
 	rec := httptest.NewRecorder()
@@ -19,5 +20,4 @@ func TestHello(t *testing.T) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, "Hello!!", rec.Body.String())
 	}
-	tearDown()
 }
