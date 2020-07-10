@@ -7,6 +7,6 @@ import (
 )
 
 // Hello function is when user accesses "/hello" response "Hello!"
-func Hello(c echo.Context) error {
+func (h *Handler) Hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello!!")
 }
