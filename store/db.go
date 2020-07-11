@@ -38,7 +38,7 @@ func GetTestDB() *gorm.DB {
 	}
 
 	db.DB().SetMaxIdleConns(3)
-	db.LogMode(true)
+	db.LogMode(false)
 	return db
 }
 
@@ -53,6 +53,6 @@ func DropTestDB() error {
 // AutoMigrate is migrate code and database
 func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
-		&model.Post{}
+		&model.Post{},
 	)
 }
