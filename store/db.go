@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gurumee92/devilog/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // init postgres
 	_ "github.com/jinzhu/gorm/dialects/sqlite"   // init sqlite
@@ -49,7 +50,9 @@ func DropTestDB() error {
 	return nil
 }
 
-// AutoMigrate is migrate code and databaseßß
+// AutoMigrate is migrate code and database
 func AutoMigrate(db *gorm.DB) {
-	db.AutoMigrate()
+	db.AutoMigrate(
+		&model.Post{}
+	)
 }
