@@ -31,7 +31,6 @@ func setup() {
 }
 
 func tearDown() {
-	postStore.DeleteAll()
 	_ = db.Close()
 
 	if err := DropTestDB(); err != nil {

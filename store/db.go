@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/gurumee92/devilog/model"
@@ -21,7 +22,7 @@ func GetDB() *gorm.DB {
 	db, err := gorm.Open("postgres", url)
 
 	if err != nil {
-		fmt.Println("storage err: ", err)
+		log.Fatalln("storage err: ", err)
 	}
 
 	db.DB().SetMaxIdleConns(3)

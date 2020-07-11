@@ -10,8 +10,8 @@ func main() {
 	e := router.NewRouter()
 	db := store.GetDB()
 	defer db.Close()
-
 	store.AutoMigrate(db)
+	// postStore := store.NewPostStore(db)
 
 	h := handler.NewHandler()
 	h.Register(e)

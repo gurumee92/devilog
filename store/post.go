@@ -65,12 +65,6 @@ func (store *PostStore) Update(post *model.Post) (*model.Post, error) {
 	return post, nil
 }
 
-// DeleteAll is All remove posts
-func (store *PostStore) DeleteAll() {
-	db := store.db
-	db.Delete(model.Post{})
-}
-
 // NewPostStore is create instance PostStore
 func NewPostStore(db *gorm.DB) *PostStore {
 	return &PostStore{db: db}
