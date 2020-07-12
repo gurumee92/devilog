@@ -22,7 +22,7 @@ func TestCreatePostSuccess(t *testing.T) {
 	b, err := json.Marshal(requestData)
 	assert.NoError(t, err)
 
-	req := httptest.NewRequest(echo.PUT, "/api/posts/", strings.NewReader(string(b)))
+	req := httptest.NewRequest(echo.POST, "/api/posts/", strings.NewReader(string(b)))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -61,7 +61,7 @@ func TestCreatePostFailedEmptyAuthor(t *testing.T) {
 	b, err := json.Marshal(requestData)
 	assert.NoError(t, err)
 
-	req := httptest.NewRequest(echo.PUT, "/api/posts/", strings.NewReader(string(b)))
+	req := httptest.NewRequest(echo.POST, "/api/posts/", strings.NewReader(string(b)))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)

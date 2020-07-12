@@ -1,6 +1,6 @@
 package router
 
-import "gopkg.in/go-playground/validator.v9"
+import "github.com/go-playground/validator"
 
 // NewValidator is create validator instance
 func NewValidator() *Validator {
