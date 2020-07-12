@@ -1,0 +1,29 @@
+version: '3.1'
+services:
+  database:
+    image: postgres
+    ports:
+        - "5432:5432"
+    environment:
+        - POSTGRES_DB=webservice
+        - POSTGRES_USER=root
+        - POSTGRES_PASSWORD=password
+  app:
+    container_name: app
+    image: app
+    build: ./
+    ports:
+      - "1323:1323"
+    links:
+      - database
+    depends_on: 
+      - database
+    restart: always
+    environment:
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
+      - DATABASE_USER=root
+      - DATABASE_PASS=password
+      - DATABASE_NAME=webservice
+
+  
