@@ -18,11 +18,11 @@ func GetDB() *gorm.DB {
 	user := os.Getenv("DATABASE_USER")
 	pass := os.Getenv("DATABASE_PASS")
 	name := os.Getenv("DATABASE_NAME")
-	url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", host, port, user, name, pass)
+	url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", host, port, user, name, pass)
 	db, err := gorm.Open("postgres", url)
 
 	if err != nil {
-		log.Fatalln("storage err: ", err)
+		log.Fatalln("storage err: ", url, err)
 	}
 
 	db.DB().SetMaxIdleConns(3)

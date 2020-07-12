@@ -43,7 +43,7 @@ func TestCreatePostSuccess(t *testing.T) {
 
 func TestCreatePostFailedBindError(t *testing.T) {
 	requestData := `{ "test": "test" }`
-	req := httptest.NewRequest(echo.PUT, "/api/posts/", strings.NewReader(requestData))
+	req := httptest.NewRequest(echo.POST, "/api/posts/", strings.NewReader(requestData))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -198,16 +198,12 @@ func TestUpdatePostFailedPathVariableTypeError(t *testing.T) {
 }
 
 func TestUpdatePostFailedBindError(t *testing.T) {
-	id := "start"
 	requestData := `{ "test": "test" }`
 
-	req := httptest.NewRequest(echo.PUT, "/api/posts/10", strings.NewReader(requestData))
+	req := httptest.NewRequest(echo.PUT, "/api/posts/1", strings.NewReader(requestData))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.SetPath("/api/posts/:id")
-	c.SetParamNames("id")
-	c.SetParamValues(id)
 
 	if assert.NoError(t, h.GetPost(c)) {
 		assert.Equal(t, http.StatusBadRequest, rec.Code)
