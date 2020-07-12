@@ -7,13 +7,15 @@ import (
 )
 
 func main() {
-	e := router.NewRouter()
+	// database
 	db := store.GetDB()
 	defer db.Close()
 	store.AutoMigrate(db)
-	// postStore := store.NewPostStore(db)
+	postStore := store.NewPostStore(db)
 
-	h := handler.NewHandler()
+	// echo
+	e := router.NewRouter()
+	h := handler.NewHandler(postStore)
 	h.Register(e)
 	e.Logger.Fatal(e.Start(":1323"))
 }

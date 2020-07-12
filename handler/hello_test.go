@@ -9,8 +9,6 @@ import (
 )
 
 func TestHello(t *testing.T) {
-	tearDown()
-	setup()
 	req := httptest.NewRequest(http.MethodGet, "/hello", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)

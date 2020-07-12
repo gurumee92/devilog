@@ -47,5 +47,4 @@ func loadFixture() {
 		}
 		postStore.Save(&post)
 	}
-
 }
