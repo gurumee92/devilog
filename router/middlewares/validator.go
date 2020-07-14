@@ -1,4 +1,4 @@
-package router
+package middlewares
 
 import "github.com/go-playground/validator"
 
