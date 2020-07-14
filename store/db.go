@@ -1,10 +1,10 @@
 package store
 
 import (
-	"fmt"
 	"log"
 	"os"
 
+	"github.com/gurumee92/devilog/config"
 	"github.com/gurumee92/devilog/model"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // init postgres
@@ -12,40 +12,22 @@ import (
 )
 
 // GetDB is get db instance
-func GetDB() *gorm.DB {
-	host := os.Getenv("DATABASE_HOST")
-	port := os.Getenv("DATABASE_PORT")
-	user := os.Getenv("DATABASE_USER")
-	pass := os.Getenv("DATABASE_PASS")
-	name := os.Getenv("DATABASE_NAME")
-	url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", host, port, user, name, pass)
-	db, err := gorm.Open("postgres", url)
+func GetDB(c *config.Config) *gorm.DB {
+	db, err := gorm.Open(c.DatabaseDialect, c.DatabaseURL)
 
 	if err != nil {
-		log.Fatalln("storage err: ", url, err)
+		log.Fatalln("storage err: ", c.DatabaseURL)
 	}
 
 	db.DB().SetMaxIdleConns(3)
-	db.LogMode(true)
-	return db
-}
-
-// GetTestDB is get db instance for test
-func GetTestDB() *gorm.DB {
-	db, err := gorm.Open("sqlite3", "./test.db")
-
-	if err != nil {
-		fmt.Println("storage err: ", err)
-	}
-
-	db.DB().SetMaxIdleConns(3)
-	db.LogMode(false)
+	db.LogMode(c.IsProduct)
+	// db.LogMode(!c.IsProduct)
 	return db
 }
 
 // DropTestDB is drop test db
-func DropTestDB() error {
-	if err := os.Remove("./test.db"); err != nil {
+func DropTestDB(c *config.Config) error {
+	if err := os.Remove(c.DatabaseURL); err != nil {
 		return err
 	}
 	return nil

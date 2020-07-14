@@ -15,8 +15,8 @@ type Config struct {
 }
 
 // GetConfig is
-func GetConfig() Config {
-	return Config{
+func GetConfig() *Config {
+	return &Config{
 		ApplicationPath: os.Getenv("APPLICATION_PATH"),
 		DatabaseDialect: os.Getenv("DATABASE_DIALECT"),
 		DatabaseURL:     os.Getenv("DATABASE_URL"),
@@ -25,7 +25,7 @@ func GetConfig() Config {
 }
 
 // GetTestConfig is
-func GetTestConfig() Config {
+func GetTestConfig() *Config {
 	wd, err := os.Getwd()
 
 	if err != nil {
@@ -35,7 +35,7 @@ func GetTestConfig() Config {
 	s := strings.Split(wd, "/")
 	path := strings.Join(s[:len(s)-1], "/")
 
-	return Config{
+	return &Config{
 		ApplicationPath: path,
 		DatabaseDialect: "sqlite3",
 		DatabaseURL:     "./test.db",
