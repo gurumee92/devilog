@@ -1,7 +1,6 @@
 package router
 
 import (
-	"github.com/gurumee92/devilog/router/middlewares"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -20,7 +19,6 @@ func NewRouter() *echo.Echo {
 		AllowMethods: []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE},
 	}))
 
-	e.Validator = middlewares.NewValidator()
-	e.Renderer = middlewares.NewTemplate()
+	e.Validator = NewValidator()
 	return e
 }
