@@ -20,4 +20,5 @@ func TestConifguration(t *testing.T) {
 
 	assert.Equal(t, "sqlite3", config.DatabaseDialect)
 	assert.Equal(t, "./test.db", config.DatabaseURL)
+	assert.Equal(t, false, config.IsProduct)
 }

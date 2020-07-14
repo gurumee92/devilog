@@ -11,6 +11,7 @@ type Config struct {
 	ApplicationPath string
 	DatabaseDialect string
 	DatabaseURL     string
+	IsProduct       bool
 }
 
 // GetConfig is
@@ -19,6 +20,7 @@ func GetConfig() Config {
 		ApplicationPath: os.Getenv("APPLICATION_PATH"),
 		DatabaseDialect: os.Getenv("DATABASE_DIALECT"),
 		DatabaseURL:     os.Getenv("DATABASE_URL"),
+		IsProduct:       true,
 	}
 }
 
@@ -37,5 +39,6 @@ func GetTestConfig() Config {
 		ApplicationPath: path,
 		DatabaseDialect: "sqlite3",
 		DatabaseURL:     "./test.db",
+		IsProduct:       false,
 	}
 }
