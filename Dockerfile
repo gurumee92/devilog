@@ -10,6 +10,7 @@ FROM scratch
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /app/public/ /app/public/
 COPY --from=builder /app/main /app/main
 
 EXPOSE 1323

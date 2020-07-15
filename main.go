@@ -16,7 +16,7 @@ func main() {
 	postStore := store.NewPostStore(db)
 
 	// echo
-	e := router.NewRouter()
+	e := router.NewRouter(c)
 	h := handler.NewHandler(postStore)
 	h.Register(e)
 	e.Logger.Fatal(e.Start(":1323"))
