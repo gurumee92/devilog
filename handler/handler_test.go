@@ -36,7 +36,7 @@ func setup() {
 	postStore = store.NewPostStore(db)
 	loadFixture()
 
-	e = router.NewRouter()
+	e = router.NewRouter(c)
 	h = NewHandler(postStore)
 	h.Register(e)
 }

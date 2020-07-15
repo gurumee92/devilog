@@ -1,13 +1,15 @@
 package router
 
 import (
+	"github.com/gurumee92/devilog/config"
+	custom "github.com/gurumee92/devilog/router/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 )
 
 // NewRouter is return customized Echo instance
-func NewRouter() *echo.Echo {
+func NewRouter(c *config.Config) *echo.Echo {
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
 	e.Use(middleware.Logger())
@@ -20,5 +22,6 @@ func NewRouter() *echo.Echo {
 	}))
 
 	e.Validator = NewValidator()
+	e.Renderer = custom.NewTemplate(c)
 	return e
 }
