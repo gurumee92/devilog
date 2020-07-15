@@ -14,8 +14,8 @@ func TestIndex(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	// Assertions
-	if assert.NoError(t, h.Index(c)) {
+	if assert.NoError(t, h.IndexPage(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Contains(t, rec.Body.String(), "Hello")
+		assert.Contains(t, rec.Body.String(), "")
 	}
 }

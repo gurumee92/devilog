@@ -7,7 +7,7 @@ import (
 // Register is routes function
 func (h *Handler) Register(e *echo.Echo) {
 	e.GET("/hello", h.Hello)
-	e.GET("/", h.Index)
+	e.GET("/", h.IndexPage)
 	postAPIGroup := e.Group("/api/posts")
 	postAPIGroup.POST("/", h.CreatePost)
 	postAPIGroup.GET("/:id", h.GetPost)
