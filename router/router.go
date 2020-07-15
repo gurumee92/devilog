@@ -12,9 +12,9 @@ import (
 func NewRouter(c *config.Config) *echo.Echo {
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
+	e.Use(middleware.Static(c.ApplicationPath + "/public/static"))
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
