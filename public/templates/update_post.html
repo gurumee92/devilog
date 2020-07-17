@@ -8,19 +8,19 @@
         <form>
             <div class="form-group">
                 <label for="title">글 번호</label>
-                <input type="text" class="form-control" id="id" value="" readonly>
+                <input type="text" class="form-control" id="id" value="{{.Post.ID}}" readonly>
             </div>
             <div class="form-group">
                 <label for="title">제목</label>
-                <input type="text" class="form-control" id="title" value="">
+                <input type="text" class="form-control" id="title" value="{{.Post.Title}}">
             </div>
             <div class="form-group">
                 <label for="author"> 작성자 </label>
-                <input type="text" class="form-control" id="author" value="" readonly>
+                <input type="text" class="form-control" id="author" value="{{.Post.Author}}" readonly>
             </div>
             <div class="form-group">
                 <label for="content"> 내용 </label>
-                <textarea class="form-control" id="content"></textarea>
+                <textarea class="form-control" id="content">{{.Post.Content}}</textarea>
             </div>
         </form>
         <a href="/" role="button" class="btn btn-secondary">취소</a>

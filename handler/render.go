@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,5 +28,21 @@ func (h *Handler) CreatePostPage(c echo.Context) error {
 
 // UpdatePostPage is
 func (h *Handler) UpdatePostPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "update_post", nil)
+	param := c.Param("id")
+	id, err := strconv.Atoi(param)
+
+	if err != nil {
+		c.Render(http.StatusInternalServerError, "error", err)
+	}
+
+	store := h.postStore
+	post, err := store.FindByID(id)
+
+	if err != nil {
+		c.Render(http.StatusInternalServerError, "error", err)
+	}
+
+	return c.Render(http.StatusOK, "update_post", map[string]interface{}{
+		"Post": post,
+	})
 }
