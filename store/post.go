@@ -33,7 +33,11 @@ func (store *PostStore) Save(post *model.Post) (*model.Post, error) {
 func (store *PostStore) FindByID(id int) (*model.Post, error) {
 	var post model.Post
 	db := store.db
-	db.Find(&post, id)
+	err := db.Find(&post, id).Error
+
+	if err != nil {
+		return nil, err
+	}
 
 	if post.ID == 0 {
 		return nil, errors.New("User isn't exist")
