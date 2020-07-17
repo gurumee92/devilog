@@ -87,7 +87,7 @@ func (store *PostStore) Update(post *model.Post) (*model.Post, error) {
 func (store *PostStore) DeleteByID(id int) error {
 	db := store.db
 	err := db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Delete(model.Post{}, "id == ?", id).Error; err != nil {
+		if err := tx.Delete(model.Post{}, "id = ?", id).Error; err != nil {
 			return err
 		}
 		return nil

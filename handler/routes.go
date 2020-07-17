@@ -15,4 +15,5 @@ func (h *Handler) Register(e *echo.Echo) {
 	postAPIGroup.POST("/", h.CreatePost)
 	postAPIGroup.GET("/:id", h.GetPost)
 	postAPIGroup.PUT("/:id", h.UpdatePost)
+	postAPIGroup.DELETE("/:id", h.DeletePost)
 }
