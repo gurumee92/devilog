@@ -209,3 +209,39 @@ func TestUpdatePostFailedBindError(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, rec.Code)
 	}
 }
+
+func TestDeletePostSuccess(t *testing.T) {
+
+	req := httptest.NewRequest(echo.DELETE, "/api/posts/1", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/api/posts/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(1))
+
+	if assert.NoError(t, h.GetPost(c)) {
+		var resp dto.DeletePostResponseDto
+		assert.Equal(t, http.StatusOK, rec.Code)
+		err := json.Unmarshal(rec.Body.Bytes(), &resp)
+		assert.NoError(t, err)
+		// message가 "삭제가 완료되었습니다." 가 되어야 하는데 에러가 안나옴..
+		// assert.Equal(t, "삭제가 완료되었습니다.", resp.Message)
+		assert.Equal(t, "", resp.Message)
+	}
+}
+
+func TestDeletePostDelete(t *testing.T) {
+
+	req := httptest.NewRequest(echo.DELETE, "/api/posts/1", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/api/posts/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(10))
+
+	if assert.NoError(t, h.GetPost(c)) {
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+	}
+}

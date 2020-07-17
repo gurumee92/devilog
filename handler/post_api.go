@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -14,15 +15,15 @@ func (h *Handler) CreatePost(c echo.Context) error {
 	requestDto := new(dto.CreatePostRequestDto)
 
 	if err := c.Bind(requestDto); err != nil {
-		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 바인드 에러 데이터 폼을 살펴보세요."})
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 바인드 에러 데이터 폼을 살펴보세요.\n" + err.Error()})
 	}
 
 	if err := c.Validate(requestDto); err != nil {
-		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 유효성 에러 데이터 폼을 살펴보세요."})
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 유효성 에러 데이터 폼을 살펴보세요.\n" + err.Error()})
 	}
 
 	if requestDto.Author == "" {
-		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "Author는 빈 값이 될 수 없습니다"})
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "Author는 빈 값이 될 수 없습니다."})
 	}
 
 	store := h.postStore
@@ -54,14 +55,14 @@ func (h *Handler) GetPost(c echo.Context) error {
 	id, err := strconv.Atoi(pathParam)
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 경로를 살펴보세요."})
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 경로를 살펴보세요.\n" + err.Error()})
 	}
 
 	store := h.postStore
 	find, err := store.FindByID(id)
 
 	if err != nil {
-		return c.JSON(http.StatusNotFound, &dto.ErrorResponse{Message: "해당 데이터가 존재하지 않습니다."})
+		return c.JSON(http.StatusNotFound, &dto.ErrorResponse{Message: "해당 데이터가 존재하지 않습니다.\n" + err.Error()})
 	}
 
 	responseDto := &dto.PostResponseDto{
@@ -80,25 +81,25 @@ func (h *Handler) UpdatePost(c echo.Context) error {
 	requestDto := new(dto.UpdatePostRequestDto)
 
 	if err := c.Bind(requestDto); err != nil {
-		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 바인드 에러 데이터 폼을 살펴보세요."})
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 바인드 에러 데이터 폼을 살펴보세요.\n" + err.Error()})
 	}
 
 	if err := c.Validate(requestDto); err != nil {
-		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 유효성 에러 데이터 폼을 살펴보세요."})
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 유효성 에러 데이터 폼을 살펴보세요.\n" + err.Error()})
 	}
 
 	pathParam := c.Param("id")
 	id, err := strconv.Atoi(pathParam)
 
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 경로를 살펴보세요."})
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 경로를 살펴보세요.\n" + err.Error()})
 	}
 
 	store := h.postStore
 	find, err := store.FindByID(id)
 
 	if err != nil {
-		return c.JSON(http.StatusNotFound, &dto.ErrorResponse{Message: "해당 데이터가 존재하지 않습니다."})
+		return c.JSON(http.StatusNotFound, &dto.ErrorResponse{Message: "해당 데이터가 존재하지 않습니다.\n" + err.Error()})
 	}
 
 	find.Title = requestDto.Title
@@ -118,5 +119,26 @@ func (h *Handler) UpdatePost(c echo.Context) error {
 		CreatedAt: updated.CreatedAt,
 		UpdatedAt: updated.UpdatedAt,
 	}
+	return c.JSON(http.StatusOK, responseDto)
+}
+
+// DeletePost is a post find by ID
+func (h *Handler) DeletePost(c echo.Context) error {
+	pathParam := c.Param("id")
+	id, err := strconv.Atoi(pathParam)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, &dto.ErrorResponse{Message: "입력 값이 틀렸습니다.: 경로를 살펴보세요.\n" + err.Error()})
+	}
+
+	store := h.postStore
+	err = store.DeleteByID(id)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return c.JSON(http.StatusNotFound, &dto.ErrorResponse{Message: "데이터가 존재하지 않습니다.\n" + err.Error()})
+	}
+
+	responseDto := &dto.DeletePostResponseDto{Message: "삭제가 완료되었습니다."}
 	return c.JSON(http.StatusOK, responseDto)
 }

@@ -6,11 +6,13 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/gurumee92/devilog/config"
 	"github.com/gurumee92/devilog/model"
 	"github.com/jinzhu/gorm"
 )
 
 var (
+	c         *config.Config
 	db        *gorm.DB
 	postStore *PostStore
 )
@@ -23,17 +25,17 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	db = GetTestDB()
+	c = config.GetTestConfig()
+	db = GetDB(c)
 	AutoMigrate(db)
 	postStore = NewPostStore(db)
-
 	loadFixture()
 }
 
 func tearDown() {
 	_ = db.Close()
 
-	if err := DropTestDB(); err != nil {
+	if err := DropTestDB(c); err != nil {
 		log.Fatal(err)
 	}
 }

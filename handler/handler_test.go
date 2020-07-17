@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/gurumee92/devilog/config"
 	"github.com/gurumee92/devilog/model"
 	"github.com/gurumee92/devilog/router"
 	"github.com/gurumee92/devilog/store"
@@ -14,6 +15,7 @@ import (
 )
 
 var (
+	c         *config.Config
 	h         *Handler
 	e         *echo.Echo
 	db        *gorm.DB
@@ -28,12 +30,13 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	db = store.GetTestDB()
+	c = config.GetTestConfig()
+	db = store.GetDB(c)
 	store.AutoMigrate(db)
 	postStore = store.NewPostStore(db)
 	loadFixture()
 
-	e = router.NewRouter()
+	e = router.NewRouter(c)
 	h = NewHandler(postStore)
 	h.Register(e)
 }
@@ -41,7 +44,7 @@ func setup() {
 func tearDown() {
 	_ = db.Close()
 
-	if err := store.DropTestDB(); err != nil {
+	if err := store.DropTestDB(c); err != nil {
 		log.Fatal(err)
 	}
 

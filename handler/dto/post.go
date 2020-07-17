@@ -24,3 +24,8 @@ type PostResponseDto struct {
 	CreatedAt time.Time `json:"created_at" xml:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" xml:"updated_at"`
 }
+
+// DeletePostResponseDto is...
+type DeletePostResponseDto struct {
+	Message string `json:"message" xml:"message"`
+}

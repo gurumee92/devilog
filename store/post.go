@@ -29,11 +29,29 @@ func (store *PostStore) Save(post *model.Post) (*model.Post, error) {
 	return post, nil
 }
 
+// FindPosts is
+func (store *PostStore) FindPosts(count, page int) ([]model.Post, error) {
+	offset := (page - 1) * count
+	db := store.db
+	var posts []model.Post
+	err := db.Order("created_at desc").Limit(count).Offset(offset).Find(&posts).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
 // FindByID find post by id
 func (store *PostStore) FindByID(id int) (*model.Post, error) {
 	var post model.Post
 	db := store.db
-	db.Find(&post, id)
+	err := db.Find(&post, id).Error
+
+	if err != nil {
+		return nil, err
+	}
 
 	if post.ID == 0 {
 		return nil, errors.New("User isn't exist")
@@ -63,6 +81,18 @@ func (store *PostStore) Update(post *model.Post) (*model.Post, error) {
 	}
 
 	return post, nil
+}
+
+// DeleteByID is
+func (store *PostStore) DeleteByID(id int) error {
+	db := store.db
+	err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Delete(model.Post{}, "id = ?", id).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	return err
 }
 
 // NewPostStore is create instance PostStore
