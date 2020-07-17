@@ -8,7 +8,16 @@ import (
 
 // IndexPage function is
 func (h *Handler) IndexPage(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", nil)
+	store := h.postStore
+	posts, err := store.FindPosts(5, 0)
+
+	if err != nil {
+		c.Render(http.StatusInternalServerError, "error", err)
+	}
+
+	return c.Render(http.StatusOK, "index", map[string]interface{}{
+		"Posts": posts,
+	})
 }
 
 // CreatePostPage is

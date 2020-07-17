@@ -21,7 +21,14 @@
         </tr>
         </thead>
         <tbody id="tbody">
-        
+        {{range .Posts}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td><a href="/posts/update/{{.ID}}">{{.Title}}</a></td>
+                <td>{{.Author}}</td>
+                <td>{{.UpdatedAt}}</td>
+            </tr>
+        {{end}}
         </tbody>
     </table>
 </div>
