@@ -29,6 +29,20 @@ func (store *PostStore) Save(post *model.Post) (*model.Post, error) {
 	return post, nil
 }
 
+// FindPosts is
+func (store *PostStore) FindPosts(count, page int) ([]model.Post, error) {
+	offset := (page - 1) * count
+	db := store.db
+	var posts []model.Post
+	err := db.Order("created_at desc").Limit(count).Offset(offset).Find(&posts).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
 // FindByID find post by id
 func (store *PostStore) FindByID(id int) (*model.Post, error) {
 	var post model.Post
@@ -67,20 +81,6 @@ func (store *PostStore) Update(post *model.Post) (*model.Post, error) {
 	}
 
 	return post, nil
-}
-
-// FindPosts is
-func (store *PostStore) FindPosts(count, page int) ([]model.Post, error) {
-	offset := (page - 1) * count
-	db := store.db
-	var posts []model.Post
-	err := db.Order("created_at desc").Limit(count).Offset(offset).Find(&posts).Error
-
-	if err != nil {
-		return nil, err
-	}
-
-	return posts, nil
 }
 
 // DeleteByID is
