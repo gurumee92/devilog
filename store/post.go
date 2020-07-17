@@ -65,6 +65,32 @@ func (store *PostStore) Update(post *model.Post) (*model.Post, error) {
 	return post, nil
 }
 
+// FindPosts is
+func (store *PostStore) FindPosts(count, page int) ([]model.Post, error) {
+	offset := (page - 1) * count
+	db := store.db
+	var posts []model.Post
+	err := db.Order("created_at desc").Limit(count).Offset(offset).Find(&posts).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+// DeleteByID is
+func (store *PostStore) DeleteByID(id int) error {
+	db := store.db
+	err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Delete(model.Post{}, "id == ?", id).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	return err
+}
+
 // NewPostStore is create instance PostStore
 func NewPostStore(db *gorm.DB) *PostStore {
 	return &PostStore{db: db}

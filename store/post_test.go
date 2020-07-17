@@ -58,3 +58,34 @@ func TestUpdate(t *testing.T) {
 	assert.Equal(t, post.Content, updated.Content)
 	assert.Equal(t, post.Author, updated.Author)
 }
+
+func TestFindPosts(t *testing.T) {
+	tearDown()
+	setup()
+	posts, err := postStore.FindPosts(5, 2)
+	assert.NoError(t, err)
+	assert.Equal(t, len(posts), 0)
+
+	posts, err = postStore.FindPosts(5, 1)
+	assert.NoError(t, err)
+	assert.Equal(t, 5, len(posts))
+
+	for idx, post := range posts {
+		assert.Equal(t, 5-idx, int(post.ID))
+	}
+}
+
+func TestDeleteByID(t *testing.T) {
+	tearDown()
+	setup()
+	posts, _ := postStore.FindPosts(5, 1)
+	assert.Equal(t, 5, len(posts))
+
+	id := 1
+	err := postStore.DeleteByID(id)
+
+	assert.NoError(t, err)
+
+	posts, _ = postStore.FindPosts(5, 1)
+	assert.Equal(t, 4, len(posts))
+}
