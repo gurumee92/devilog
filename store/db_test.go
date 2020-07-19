@@ -1,4 +1,4 @@
-package handler
+package store
 
 import (
 	"log"
@@ -8,18 +8,13 @@ import (
 
 	"github.com/gurumee92/devilog/config"
 	"github.com/gurumee92/devilog/model"
-	"github.com/gurumee92/devilog/router"
-	"github.com/gurumee92/devilog/store"
 	"github.com/jinzhu/gorm"
-	"github.com/labstack/echo/v4"
 )
 
 var (
 	c         *config.Config
-	h         *Handler
-	e         *echo.Echo
 	db        *gorm.DB
-	postStore *store.PostStore
+	postStore *PostStore
 )
 
 func TestMain(m *testing.M) {
@@ -31,25 +26,18 @@ func TestMain(m *testing.M) {
 
 func setup() {
 	c = config.GetTestConfig()
-	db = store.GetDB(c)
-	store.AutoMigrate(db)
-	postStore = store.NewPostStore(db)
+	db = GetDB(c)
+	AutoMigrate(db)
+	postStore = NewPostStore(db)
 	loadFixture()
-
-	e = router.NewRouter(c)
-	h = NewHandler(postStore)
-	h.Register(e)
 }
 
 func tearDown() {
 	_ = db.Close()
 
-	if err := store.DropTestDB(c); err != nil {
+	if err := DropTestDB(c); err != nil {
 		log.Fatal(err)
 	}
-
-	h = nil
-	e = nil
 }
 
 func loadFixture() {
