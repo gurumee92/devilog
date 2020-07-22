@@ -19,5 +19,5 @@ func main() {
 	e := router.NewRouter(c)
 	h := handler.NewHandler(postStore)
 	h.Register(e)
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":8080"))
 }
