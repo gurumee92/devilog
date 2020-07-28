@@ -16,23 +16,28 @@ type Config struct {
 	DatabaseURL     string
 	IsProduct       bool
 	GoogleOAuth     oauth2.Config
+	NaverOAuth      oauth2.Config
 }
 
 // GetConfig is
 func GetConfig() *Config {
-	scopesString := os.Getenv("GOGGLE_SCOPES")
-	scopes := make([]string, 0)
-
-	for _, s := range strings.Split(scopesString, ",") {
-		scopes = append(scopes, "https://www.googleapis.com/auth/userinfo."+s)
-	}
-
 	googleOAuth := oauth2.Config{
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Endpoint:     google.Endpoint,
 		RedirectURL:  os.Getenv("GOOGLE_REDIRECT_URL"),
-		Scopes:       scopes,
+		Scopes:       strings.Split(os.Getenv("GOOGLE_SCOPES"), ","),
+	}
+
+	naverOAuth := oauth2.Config{
+		ClientID:     os.Getenv("NAVER_CLIENT_ID"),
+		ClientSecret: os.Getenv("NAVER_CLIENT_SECRET"),
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  "https://nid.naver.com/oauth2.0/authorize",
+			TokenURL: "https://nid.naver.com/oauth2.0/token",
+		},
+		RedirectURL: os.Getenv("NAVER_REDIRECT_URL"),
+		Scopes:      strings.Split(os.Getenv("NAVER_SCOPES"), ","),
 	}
 	return &Config{
 		ApplicationPath: os.Getenv("APPLICATION_PATH"),
@@ -40,6 +45,7 @@ func GetConfig() *Config {
 		DatabaseURL:     os.Getenv("DATABASE_URL"),
 		IsProduct:       true,
 		GoogleOAuth:     googleOAuth,
+		NaverOAuth:      naverOAuth,
 	}
 }
 
