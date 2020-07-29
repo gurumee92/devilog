@@ -40,7 +40,7 @@ func GetConfig() *Config {
 			TokenURL: "https://nid.naver.com/oauth2.0/token",
 		},
 		RedirectURL: os.Getenv("NAVER_REDIRECT_URL"),
-		Scopes:      strings.Split(os.Getenv("NAVER_SCOPES"), ","),
+		// Scopes:      strings.Split(os.Getenv("NAVER_SCOPES"), ","),
 	}
 	return &Config{
 		ApplicationPath: os.Getenv("APPLICATION_PATH"),
