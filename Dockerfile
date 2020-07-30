@@ -13,7 +13,7 @@ COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /app/public/ /app/public/
 COPY --from=builder /app/main /app/main
 
-EXPOSE 1323
+EXPOSE 8080
 
 ARG APPLICATION_PATH
 ARG DATABASE_DIALECT

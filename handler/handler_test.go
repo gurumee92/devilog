@@ -37,7 +37,7 @@ func setup() {
 	loadFixture()
 
 	e = router.NewRouter(c)
-	h = NewHandler(postStore)
+	h = NewHandler(c, postStore)
 	h.Register(e)
 }
 

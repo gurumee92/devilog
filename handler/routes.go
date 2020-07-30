@@ -16,4 +16,9 @@ func (h *Handler) Register(e *echo.Echo) {
 	postAPIGroup.GET("/:id", h.GetPost)
 	postAPIGroup.PUT("/:id", h.UpdatePost)
 	postAPIGroup.DELETE("/:id", h.DeletePost)
+
+	e.GET("/oauth2/authorization/google", h.GoogleLogin)
+	e.GET("/login/oauth2/code/google", h.GoogleCallback)
+	e.GET("/oauth2/authorization/naver", h.NaverLogin)
+	e.GET("/login/oauth2/code/naver", h.NaverCallback)
 }
