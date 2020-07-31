@@ -1,8 +1,13 @@
 package handler
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -39,10 +44,43 @@ func (h *Handler) GoogleCallback(c echo.Context) error {
 	}
 
 	if c.FormValue("state") != cookie.Value {
-		log.Printf("invalid google oauth state cookie:%s state:%s\n", cookie.Value, c.FormValue("state"))
-		return c.Redirect(http.StatusTemporaryRedirect, "/error")
+		errMessage := fmt.Sprintf("invalid google oauth state cookie:%s state:%s\n", cookie.Value, c.FormValue("state"))
+		return errors.New(errMessage)
 	}
 
+	code := c.FormValue("code")
+	token, err := h.config.GoogleOAuth.Exchange(context.Background(), code)
+
+	if err != nil {
+		errMessage := fmt.Sprintf("invalid google oauth state cookie:%s state:%s\n", cookie.Value, c.FormValue("state"))
+		return errors.New(errMessage)
+	}
+
+	if !token.Valid() {
+		return errors.New("invalid token")
+	}
+
+	url := fmt.Sprintf("https://www.googleapis.com/oauth2/v1/userinfo?access_token=%v", token.AccessToken)
+	resp, err := http.Get(url)
+
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+	contents, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return err
+	}
+
+	jsonMap := make(map[string]interface{})
+	json.Unmarshal(contents, &jsonMap)
+	id := jsonMap["id"]
+	email := jsonMap["email"] //113851460421237781529
+	username := jsonMap["name"]
+	picture := jsonMap["picture"]
+	log.Println(id, email, username, picture)
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }
 
