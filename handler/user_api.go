@@ -52,8 +52,7 @@ func (h *Handler) GoogleCallback(c echo.Context) error {
 	token, err := h.config.GoogleOAuth.Exchange(context.Background(), code)
 
 	if err != nil {
-		errMessage := fmt.Sprintf("invalid google oauth state cookie:%s state:%s\n", cookie.Value, c.FormValue("state"))
-		return errors.New(errMessage)
+		return err
 	}
 
 	if !token.Valid() {
@@ -102,14 +101,51 @@ func (h *Handler) NaverCallback(c echo.Context) error {
 	cookie, err := c.Cookie("state")
 
 	if err != nil {
-		log.Println("error: ", err.Error())
-		return c.Redirect(http.StatusTemporaryRedirect, "/error")
+		return err
 	}
 
 	if c.FormValue("state") != cookie.Value {
-		log.Printf("invalid naver oauth state cookie:%s state:%s\n", cookie.Value, c.FormValue("state"))
-		return c.Redirect(http.StatusTemporaryRedirect, "/error")
+		errMessage := fmt.Sprintf("invalid naver oauth state cookie:%s state:%s\n", cookie.Value, c.FormValue("state"))
+		return errors.New(errMessage)
 	}
 
+	code := c.FormValue("code")
+	token, err := h.config.NaverOAuth.Exchange(context.Background(), code)
+
+	if err != nil {
+		return err
+	}
+
+	if !token.Valid() {
+		return errors.New("invalid token")
+	}
+
+	log.Println(token)
+
+	url := "https://openapi.naver.com/v1/nid/me"
+	request, err := http.NewRequest("GET", url, nil)
+	request.Header.Add("Authorization", "Bearer "+token.AccessToken)
+	client := &http.Client{}
+	resp, err := client.Do(request)
+
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+	contents, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return err
+	}
+
+	jsonMap := make(map[string]interface{})
+	json.Unmarshal(contents, &jsonMap)
+	jsonResp := jsonMap["response"].(map[string]interface{})
+	id := jsonResp["id"]
+	email := jsonResp["email"]
+	username := jsonResp["name"]
+	picture := jsonResp["profile_image"]
+	log.Println(id, email, username, picture)
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }
