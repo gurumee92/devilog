@@ -22,16 +22,23 @@ func generateOauthState() string {
 	return state
 }
 
-// GoogleLogin is
-func (h *Handler) GoogleLogin(c echo.Context) error {
+// SocialLogin is ...
+func (h *Handler) SocialLogin(c echo.Context) error {
+	provider := c.Param("social_provider")
 	state := generateOauthState()
 	cookie := new(http.Cookie)
 	cookie.Name = "state"
 	cookie.Value = state
 	cookie.Expires = time.Now().Add(1 * 24 * time.Hour)
-	cookie.Path = "/login/oauth2/code/google"
+	cookie.Path = "/login/oauth2/code/" + provider
 	c.SetCookie(cookie)
-	url := h.config.GoogleOAuth.AuthCodeURL(state)
+
+	if provider == "google" {
+		url := h.config.GoogleOAuth.AuthCodeURL(state)
+		return c.Redirect(http.StatusTemporaryRedirect, url)
+	}
+
+	url := h.config.NaverOAuth.AuthCodeURL(state)
 	return c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
@@ -76,24 +83,11 @@ func (h *Handler) GoogleCallback(c echo.Context) error {
 	jsonMap := make(map[string]interface{})
 	json.Unmarshal(contents, &jsonMap)
 	id := jsonMap["id"]
-	email := jsonMap["email"] //113851460421237781529
+	email := jsonMap["email"]
 	username := jsonMap["name"]
 	picture := jsonMap["picture"]
 	log.Println(id, email, username, picture)
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
-}
-
-// NaverLogin is
-func (h *Handler) NaverLogin(c echo.Context) error {
-	state := generateOauthState()
-	cookie := new(http.Cookie)
-	cookie.Name = "state"
-	cookie.Value = state
-	cookie.Expires = time.Now().Add(1 * 24 * time.Hour)
-	cookie.Path = "/login/oauth2/code/naver"
-	c.SetCookie(cookie)
-	url := h.config.NaverOAuth.AuthCodeURL(state)
-	return c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 // NaverCallback is
@@ -119,8 +113,6 @@ func (h *Handler) NaverCallback(c echo.Context) error {
 	if !token.Valid() {
 		return errors.New("invalid token")
 	}
-
-	log.Println(token)
 
 	url := "https://openapi.naver.com/v1/nid/me"
 	request, err := http.NewRequest("GET", url, nil)
