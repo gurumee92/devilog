@@ -82,11 +82,12 @@ func (h *Handler) GoogleCallback(c echo.Context) error {
 
 	jsonMap := make(map[string]interface{})
 	json.Unmarshal(contents, &jsonMap)
-	id := jsonMap["id"]
-	email := jsonMap["email"]
-	username := jsonMap["name"]
-	picture := jsonMap["picture"]
-	log.Println(id, email, username, picture)
+	log.Println(jsonMap)
+	// id := jsonMap["id"]
+	// email := jsonMap["email"]
+	// username := jsonMap["name"]
+	// picture := jsonMap["picture"]
+	// log.Println(id, email, username, picture)
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }
 
@@ -134,10 +135,11 @@ func (h *Handler) NaverCallback(c echo.Context) error {
 	jsonMap := make(map[string]interface{})
 	json.Unmarshal(contents, &jsonMap)
 	jsonResp := jsonMap["response"].(map[string]interface{})
-	id := jsonResp["id"]
-	email := jsonResp["email"]
-	username := jsonResp["name"]
-	picture := jsonResp["profile_image"]
-	log.Println(id, email, username, picture)
+	log.Println(jsonResp)
+	// id := jsonResp["id"]
+	// email := jsonResp["email"]
+	// username := jsonResp["name"]
+	// picture := jsonResp["profile_image"]
+	// log.Println(id, email, username, picture)
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }
