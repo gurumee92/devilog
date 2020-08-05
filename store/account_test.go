@@ -87,3 +87,51 @@ func TestAccountFindByEmailFailed(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, account)
 }
+
+func TestUpdateAccount(t *testing.T) {
+	account, err := accountStore.FindByID(1)
+	assert.NoError(t, err)
+
+	account.Email = "Updated"
+	account.Password = "Updated"
+	account.Username = "Updated"
+	account.Picture = "Updated"
+	updated, err := accountStore.Update(account)
+	assert.NoError(t, err)
+	assert.Equal(t, account.Email, updated.Email)
+	assert.Equal(t, account.Password, updated.Password)
+	assert.Equal(t, account.Username, updated.Username)
+	assert.Equal(t, account.Picture, updated.Picture)
+}
+
+func TestFindAccounts(t *testing.T) {
+	tearDown()
+	setup()
+	accounts, err := accountStore.FindAccounts(5, 2)
+	assert.NoError(t, err)
+	assert.Equal(t, len(accounts), 0)
+
+	accounts, err = accountStore.FindAccounts(5, 1)
+	assert.NoError(t, err)
+	assert.Equal(t, 2, len(accounts))
+
+	for idx, account := range accounts {
+		assert.Equal(t, 2-idx, int(account.ID))
+	}
+}
+
+func TestAccountDeleteByID(t *testing.T) {
+	tearDown()
+	setup()
+	accounts, err := accountStore.FindAccounts(5, 1)
+	assert.NoError(t, err)
+	assert.Equal(t, 2, len(accounts))
+
+	id := 1
+	err = accountStore.DeleteByID(id)
+	assert.NoError(t, err)
+
+	accounts, err = accountStore.FindAccounts(5, 1)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(accounts))
+}
