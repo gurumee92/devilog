@@ -113,7 +113,7 @@ func (store *AccountStore) DeleteByID(id int) error {
 	return err
 }
 
-// NewAccounStore is
-func NewAccounStore(db *gorm.DB) *AccountStore {
+// NewAccountStore is
+func NewAccountStore(db *gorm.DB) *AccountStore {
 	return &AccountStore{db: db}
 }

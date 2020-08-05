@@ -12,9 +12,10 @@ import (
 )
 
 var (
-	c         *config.Config
-	db        *gorm.DB
-	postStore *PostStore
+	c            *config.Config
+	db           *gorm.DB
+	postStore    *PostStore
+	accountStore *AccountStore
 )
 
 func TestMain(m *testing.M) {
@@ -29,6 +30,7 @@ func setup() {
 	db = GetDB(c)
 	AutoMigrate(db)
 	postStore = NewPostStore(db)
+	accountStore = NewAccountStore(db)
 	loadFixture()
 }
 
@@ -41,6 +43,15 @@ func tearDown() {
 }
 
 func loadFixture() {
+	for i := 1; i <= 2; i++ {
+		account := model.Account{
+			Email:    "test" + strconv.Itoa(i),
+			Password: "test" + strconv.Itoa(i),
+			Username: "test" + strconv.Itoa(i),
+			Picture:  "test" + strconv.Itoa(i),
+		}
+		accountStore.Save(&account)
+	}
 	for i := 1; i <= 5; i++ {
 		post := model.Post{
 			Title:   "test" + strconv.Itoa(i),

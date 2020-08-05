@@ -36,6 +36,7 @@ func DropTestDB(c *config.Config) error {
 // AutoMigrate is migrate code and database
 func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
+		&model.Account{},
 		&model.Post{},
 	)
 }
