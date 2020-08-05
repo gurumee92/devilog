@@ -26,7 +26,7 @@ func TestSavePost(t *testing.T) {
 	assert.Equal(t, author, saved.Author)
 }
 
-func TestFindByIdSuccess(t *testing.T) {
+func TestPostFindByIdSuccess(t *testing.T) {
 	id := 1
 	test := "test" + strconv.Itoa(id)
 	post, err := postStore.FindByID(id)
@@ -38,7 +38,7 @@ func TestFindByIdSuccess(t *testing.T) {
 	assert.Equal(t, test, post.Author)
 }
 
-func TestFindByIdFailed(t *testing.T) {
+func TestPostFindByIdFailed(t *testing.T) {
 	id := 10
 	post, err := postStore.FindByID(id)
 
@@ -46,7 +46,7 @@ func TestFindByIdFailed(t *testing.T) {
 	assert.Equal(t, true, post == nil)
 }
 
-func TestUpdate(t *testing.T) {
+func TestUpdatePost(t *testing.T) {
 	post, _ := postStore.FindByID(1)
 	post.Title = "UpdatedTitle"
 	post.Content = "UpdatedContent"
@@ -75,7 +75,7 @@ func TestFindPosts(t *testing.T) {
 	}
 }
 
-func TestDeleteByID(t *testing.T) {
+func TestPostDeleteByID(t *testing.T) {
 	tearDown()
 	setup()
 	posts, _ := postStore.FindPosts(5, 1)
