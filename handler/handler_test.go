@@ -15,11 +15,12 @@ import (
 )
 
 var (
-	c         *config.Config
-	h         *Handler
-	e         *echo.Echo
-	db        *gorm.DB
-	postStore *store.PostStore
+	c            *config.Config
+	h            *Handler
+	e            *echo.Echo
+	db           *gorm.DB
+	postStore    *store.PostStore
+	accountStore *store.AccountStore
 )
 
 func TestMain(m *testing.M) {
@@ -34,10 +35,11 @@ func setup() {
 	db = store.GetDB(c)
 	store.AutoMigrate(db)
 	postStore = store.NewPostStore(db)
+	accountStore = store.NewAccountStore(db)
 	loadFixture()
 
 	e = router.NewRouter(c)
-	h = NewHandler(c, postStore)
+	h = NewHandler(c, postStore, accountStore)
 	h.Register(e)
 }
 

@@ -14,10 +14,11 @@ func main() {
 	defer db.Close()
 	store.AutoMigrate(db)
 	postStore := store.NewPostStore(db)
+	accountStore := store.NewAccountStore(db)
 
 	// echo
 	e := router.NewRouter(c)
-	h := handler.NewHandler(c, postStore)
+	h := handler.NewHandler(c, postStore, accountStore)
 	h.Register(e)
 	e.Logger.Fatal(e.Start(":8080"))
 }

@@ -7,14 +7,16 @@ import (
 
 // Handler is ...
 type Handler struct {
-	config    *config.Config
-	postStore *store.PostStore
+	config       *config.Config
+	postStore    *store.PostStore
+	accountStore *store.AccountStore
 }
 
 // NewHandler is Function, return Handler
-func NewHandler(config *config.Config, postStore *store.PostStore) *Handler {
+func NewHandler(config *config.Config, postStore *store.PostStore, accountStore *store.AccountStore) *Handler {
 	return &Handler{
-		config:    config,
-		postStore: postStore,
+		config:       config,
+		postStore:    postStore,
+		accountStore: accountStore,
 	}
 }
